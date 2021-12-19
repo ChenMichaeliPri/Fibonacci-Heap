@@ -171,15 +171,17 @@ public class FibonacciHeap {
     *  
     */
     public static class HeapNode{
-
-    	public int key;
+        private int key;
+        private HeapNode next;
+        private HeapNode prev;
+        private HeapNode parent;
+        private HeapNode child;
+        private  int rank;
+        private boolean mark;
+        private DoublyLinkedList nodeList;
 
     	public HeapNode(int key) {
     		this.key = key;
-    	}
-
-    	public int getKey() {
-    		return this.key;
     	}
     }
 
