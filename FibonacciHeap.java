@@ -3,8 +3,7 @@
  *
  * An implementation of a Fibonacci Heap over integers.
  */
-public class FibonacciHeap
-{
+public class FibonacciHeap {
 
    /**
     * public boolean isEmpty()
@@ -182,5 +181,94 @@ public class FibonacciHeap
     	public int getKey() {
     		return this.key;
     	}
+    }
+
+    public static class DoublyLinkedList {
+        private HeapNode firstNode;
+        private int size;
+
+        public DoublyLinkedList() {
+            this.firstNode = null;
+            this.size = 0;
+        }
+
+        public boolean isEmpty() {
+            return this.size == 0;
+        }
+
+        /**
+         * public void concatenate(DoublyLinkedList otherDll)
+         *
+         * Method for concatenating two Dlls.
+         * Complexity O(1).
+         */
+
+         public void concatenate(DoublyLinkedList otherDll) {
+             this.size += otherDll.size;
+
+             if (otherDll.isEmpty()) {}
+
+             else if (isEmpty()) this.firstNode = otherDll.firstNode;
+
+             else {
+                 HeapNode lastNodeOfHeap1 = this.firstNode.prev;
+                 lastNodeOfHeap1.next = otherDll.firstNode;
+                 HeapNode lastNodeOfHeap2 = otherDll.firstNode.prev;
+                 otherDll.firstNode.prev = lastNodeOfHeap1;
+                 lastNodeOfHeap2.next = this.firstNode;
+                 this.firstNode.prev = lastNodeOfHeap2;
+             }
+         }
+
+        /**
+         * public void add (HeapNode node)
+         *
+         * Method for adding a node to a Dll.
+         * Complexity: O(1).
+         */
+
+        public void add(HeapNode node) {
+            if (this.size == 0) {
+                this.firstNode = node;
+                size++;
+                node.next = node;
+                node.prev = node;
+            }
+            else {
+                HeapNode lastNode = this.firstNode.prev;
+                lastNode.next = node;
+                node.next = this.firstNode;
+                lastNode.next.prev = lastNode;
+                this.firstNode.prev = node;
+                this.firstNode = node;
+            }
+        }
+
+        /**
+         * public void delete(HeapNode node)
+         *
+         * Method for deleting a node from a Dll.
+         * Complexity: O(1).
+         */
+
+        public void delete(HeapNode node) {
+            if (this.size == 1) {
+                this.firstNode = null;
+                this.size--;
+            }
+            else {
+                HeapNode prevNode = node.prev;
+                HeapNode nextNode = node.next;
+                // Changing pointers in order to delete the node
+                nextNode.prev = prevNode;
+                prevNode.next = nextNode;
+
+                if (Node == this.firstNode) {
+                    this.firstNode = node.next;
+                }
+                node.next = node;
+                node.prev = node;
+            }
+        }
     }
 }
