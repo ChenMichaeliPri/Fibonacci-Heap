@@ -82,11 +82,12 @@ public class FibonacciHeap {
     * public HeapNode findMin()
     *
     * Returns the node of the heap whose key is minimal, or null if the heap is empty.
+    * Complexity O(1)
     *
     */
     public HeapNode findMin()
     {
-    	return new HeapNode(678);// should be replaced by student code
+    	return this.minNode;
     }
     
    /**
