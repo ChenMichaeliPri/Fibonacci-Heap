@@ -16,8 +16,7 @@ public class FibonacciHeap {
     * Returns true if and only if the heap is empty.
     * Complexity O(1).
     */
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
     	return this.minNode == null;
     }
 		
@@ -25,13 +24,28 @@ public class FibonacciHeap {
     * public HeapNode insert(int key)
     *
     * Creates a node (of type HeapNode) which contains the given key, and inserts it into the heap.
-    * The added key is assumed not to already belong to the heap.  
-    * 
+    * The added key is assumed not to already belong to the heap.
+    * Complexity O(1).
     * Returns the newly created node.
     */
-    public HeapNode insert(int key)
-    {    
-    	return new HeapNode(key); // should be replaced by student code
+    public HeapNode insert(int key) {
+    	HeapNode newNode = new HeapNode(key);
+    	this.size++;
+
+    	if (isEmpty()) {
+    	    DoublyLinkedList nodeList = new DoublyLinkedList();
+    	    nodeList.add(newNode);
+    	    this.minNode = newNode;
+    	    newNode.nodeList = nodeList;
+        }
+    	else {
+    	    DoublyLinkedList rootsList = this.minNode.nodeList;
+    	    rootsList.add(newNode);
+    	    newNode.nodeList = rootsList;
+            // Updating new minimum node if needed
+    	    if (newNode.key < this.minNode.key) this.minNode = newNode;
+        }
+    	return newNode;
     }
 
    /**
