@@ -265,7 +265,7 @@ public class FibonacciHeap {
                 nextNode.prev = prevNode;
                 prevNode.next = nextNode;
 
-                if (Node == this.firstNode) {
+                if (node == this.firstNode) {
                     this.firstNode = node.next;
                 }
                 node.next = node;
