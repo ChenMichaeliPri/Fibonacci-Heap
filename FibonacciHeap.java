@@ -60,6 +60,31 @@ public class FibonacciHeap {
     }
 
     /**
+     * private void deleteMinCut(HeapNode node)
+     *
+     * Cuts the node from the current tree, supports deleteMinCut method.
+     * Complexity O(1 amortized).
+     *
+     */
+    private void deleteMinCut(HeapNode node) {
+        cutsCounter++;
+        this.minNode.nodeList.size += node.child.nodeList.size - 1;
+        HeapNode leftFromNode = node.prev;
+        HeapNode rightFromNode = node.next;
+        HeapNode leftmostChild = node.child.nodeList.firstNode;
+        HeapNode rightmostChild = node.child.nodeList.firstNode.prev;
+        leftFromNode.next = leftmostChild;
+        leftmostChild.prev = leftFromNode;
+        rightFromNode.prev = rightmostChild;
+        rightmostChild.next = rightFromNode;
+
+        // change min, to be fixed in delete min
+        this.minNode = node.next;
+        node.child = null;
+        node.next = node.prev = node;
+    }
+
+    /**
      * public void findMaxRank()
      *
      * Returns the maximum rank binomial tree from the heap.
@@ -84,7 +109,7 @@ public class FibonacciHeap {
      * Complexity O(1 amortized).
      *
      */
-    private void cut(HeapNode node) {
+    private void cascadingCut(HeapNode node) {
         cutsCounter++;
         HeapNode parent = node.parent;
         if (node.nodeList.size == 1) { // has no siblings
