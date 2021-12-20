@@ -14,11 +14,11 @@ public class FibonacciHeap {
     * public boolean isEmpty()
     *
     * Returns true if and only if the heap is empty.
-    *   
+    * Complexity O(1).
     */
     public boolean isEmpty()
     {
-    	return false; // should be replaced by student code
+    	return this.minNode == null;
     }
 		
    /**
