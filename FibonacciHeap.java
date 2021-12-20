@@ -4,6 +4,11 @@
  * An implementation of a Fibonacci Heap over integers.
  */
 public class FibonacciHeap {
+    private HeapNode minNode;
+    private int size;
+    private int marksCounter;
+    private int cutsCounter;
+    private int linksCounter;
 
    /**
     * public boolean isEmpty()
