@@ -108,11 +108,11 @@ public class FibonacciHeap {
     * public int size()
     *
     * Returns the number of elements in the heap.
-    *   
+    * Complexity O(1)
+    *
     */
-    public int size()
-    {
-    	return -123; // should be replaced by student code
+    public int size() {
+    	return this.size;
     }
     	
     /**
