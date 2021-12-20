@@ -105,6 +105,25 @@ public class FibonacciHeap {
         }
     }
 
+    /**
+     * private void changeParentToNull(DoublyLinkedList nodeDll)
+     *
+     * Supports deleteMin method. Changes the parents of the sons of deleted node to null,
+     * changes the mark of the nodes to false;
+     * Complexity O(Log n amortized).
+     *
+     */
+    private void changeParentToNull(DoublyLinkedList nodeDll) {
+        HeapNode iterNode = nodeDll.firstNode;
+
+        for (int i=0; i < nodeDll.size; i++) {
+            iterNode.parent = null;
+            iterNode.nodeList = this.minNode.nodeList; // now belongs to root node list.
+            iterNode = iterNode.next;
+            iterNode.mark = false;
+        }
+    }
+
    /**
     * public HeapNode findMin()
     *
