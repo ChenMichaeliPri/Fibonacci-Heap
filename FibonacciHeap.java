@@ -77,6 +77,34 @@ public class FibonacciHeap {
         return maxRank;
     }
 
+    /**
+     * private void cut(HeapNode node)
+     *
+     * Cuts the node from the current tree, supports decreaseKey method.
+     * Complexity O(1 amortized).
+     *
+     */
+    private void cut(HeapNode node) {
+        cutsCounter++;
+        HeapNode parent = node.parent;
+        if (node.nodeList.size == 1) { // has no siblings
+            node.parent.child = null;
+        }
+        else {
+            node.parent.child = node.next;
+        }
+        node.nodeList.delete(node);
+        node.parent = null;
+        this.minNode.nodeList.add(node);
+        node.mark = false;
+
+        if (parent.mark) cut(parent);
+        else {
+            parent.mark = true;
+            this.marksCounter++;
+        }
+    }
+
    /**
     * public HeapNode findMin()
     *
