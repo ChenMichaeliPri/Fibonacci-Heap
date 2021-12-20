@@ -56,14 +56,17 @@ public class FibonacciHeap {
     *
     */
     public void deleteMin() {
-     	deleteMinCut(this.minNode);
-        HeapNode iterNode = this.minNode;
+        if (this.size == 1) this.minNode = null;
+        else {
+            deleteMinCut(this.minNode);
+            HeapNode iterNode = this.minNode;
 
-        for (int i=0; i < this.minNode.nodeList.size; i++) {
-            if (iterNode.key < this.minNode.key) this.minNode = iterNode;
-            iterNode = iterNode.next;
+            for (int i=0; i < this.minNode.nodeList.size; i++) {
+                if (iterNode.key < this.minNode.key) this.minNode = iterNode;
+                iterNode = iterNode.next;
+            }
+            consolidate();
         }
-        //consolidate()
     }
 
     /**
@@ -85,7 +88,7 @@ public class FibonacciHeap {
         rightFromNode.prev = rightmostChild;
         rightmostChild.next = rightFromNode;
 
-        // change min, to be fixed in delete min
+        // change min
         this.minNode = node.next;
         node.child = null;
         node.next = node.prev = node;
@@ -186,8 +189,7 @@ public class FibonacciHeap {
 	* It is assumed that x indeed belongs to the heap.
     *
     */
-    public void delete(HeapNode x) 
-    {    
+    public void delete(HeapNode x) {
     	return; // should be replaced by student code
     }
 
@@ -202,7 +204,7 @@ public class FibonacciHeap {
         if (x.parent == null) x.key -= delta; // node is root, doesn't harm heap invariants -> no cut
         else {
             x.key -= delta;
-            if (x.key < x.parent.key) cascadingCut(x);
+            if (x.key < x.parent.key) cascadingCut(x); // heap order violation -> cascading cut
         }
     }
 
@@ -282,10 +284,23 @@ public class FibonacciHeap {
     *  
     * ###CRITICAL### : you are NOT allowed to change H. 
     */
-    public static int[] kMin(FibonacciHeap H, int k)
-    {    
-        int[] arr = new int[100];
-        return arr; // should be replaced by student code
+    public static int[] kMin(FibonacciHeap H, int k) {
+        int[] arr = new int[k];
+        FibonacciHeap helperHeap = new FibonacciHeap();
+        helperHeap.insert(H.minNode.key);
+        helperHeap.minNode.kMinPointer = H.minNode;
+
+        for (int i=0; i<k; i++) {
+            HeapNode iterNode = helperHeap.minNode;
+            arr[i] = iterNode.key;
+            iterNode = iterNode.kMinPointer.child; // check if there is a child
+            helperHeap.deleteMin();
+
+            for (int j=0; j < iterNode.nodeList.size; j++) {
+                helperHeap.insert(iterNode.key);
+
+            }
+        }
     }
     
    /**
@@ -297,6 +312,7 @@ public class FibonacciHeap {
     */
     public static class HeapNode{
         private int key;
+        private HeapNode kMinPointer;
         private HeapNode next;
         private HeapNode prev;
         private HeapNode parent;
