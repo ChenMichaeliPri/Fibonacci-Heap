@@ -7,8 +7,8 @@ public class FibonacciHeap {
     private HeapNode minNode;
     private int size;
     private int marksCounter;
-    private int cutsCounter;
-    private int linksCounter;
+    private static int cutsCounter;
+    private static int linksCounter;
 
    /**
     * public boolean isEmpty()
@@ -173,10 +173,10 @@ public class FibonacciHeap {
     * run-time of the program. A link operation is the operation which gets as input two
     * trees of the same rank, and generates a tree of rank bigger by one, by hanging the
     * tree which has larger value in its root under the other tree.
+    * Complexity O(1).
     */
-    public static int totalLinks()
-    {    
-    	return -345; // should be replaced by student code
+    public static int totalLinks() {
+    	return linksCounter;
     }
 
    /**
@@ -184,11 +184,11 @@ public class FibonacciHeap {
     *
     * This static function returns the total number of cut operations made during the
     * run-time of the program. A cut operation is the operation which disconnects a subtree
-    * from its parent (during decreaseKey/delete methods). 
+    * from its parent (during decreaseKey/delete methods).
+    * Complexity O(1)
     */
-    public static int totalCuts()
-    {    
-    	return -456; // should be replaced by student code
+    public static int totalCuts() {
+    	return cutsCounter;
     }
 
      /**
