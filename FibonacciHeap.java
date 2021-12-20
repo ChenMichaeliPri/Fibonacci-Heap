@@ -53,6 +53,7 @@ public class FibonacciHeap {
     *
     * Deletes the node containing the minimum key, and consolidates the heap.
     *Complexity O(log n amortized), O(n) WC.
+    *
     */
     public void deleteMin() {
      	deleteMinCut(this.minNode);
@@ -106,34 +107,6 @@ public class FibonacciHeap {
             iterNode = iterNode.next;
         }
         return maxRank;
-    }
-
-    /**
-     * private void cut(HeapNode node)
-     *
-     * Cuts the node from the current tree, supports decreaseKey method.
-     * Complexity O(1 amortized).
-     *
-     */
-    private void cascadingCut(HeapNode node) {
-        cutsCounter++;
-        HeapNode parent = node.parent;
-        if (node.nodeList.size == 1) { // has no siblings
-            node.parent.child = null;
-        }
-        else {
-            node.parent.child = node.next;
-        }
-        node.nodeList.delete(node);
-        node.parent = null;
-        this.minNode.nodeList.add(node);
-        node.mark = false;
-
-        if (parent.mark) cascadingCut(parent);
-        else {
-            parent.mark = true;
-            this.marksCounter++;
-        }
     }
 
     /**
@@ -223,10 +196,42 @@ public class FibonacciHeap {
     *
     * Decreases the key of the node x by a non-negative value delta. The structure of the heap should be updated
     * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
+    * Complexity O(1).
     */
-    public void decreaseKey(HeapNode x, int delta)
-    {    
-    	return; // should be replaced by student code
+    public void decreaseKey(HeapNode x, int delta) {
+        if (x.parent == null) x.key -= delta; // node is root, doesn't harm heap invariants -> no cut
+        else {
+            x.key -= delta;
+            if (x.key < x.parent.key) cascadingCut(x);
+        }
+    }
+
+    /**
+     * private void cascadingCut(HeapNode node)
+     *
+     * Cuts the node from the current tree, supports decreaseKey method.
+     * Complexity O(1 amortized).
+     *
+     */
+    private void cascadingCut(HeapNode node) {
+        cutsCounter++;
+        HeapNode parent = node.parent;
+        if (node.nodeList.size == 1) { // has no siblings
+            node.parent.child = null;
+        }
+        else {
+            node.parent.child = node.next;
+        }
+        node.nodeList.delete(node);
+        node.parent = null;
+        this.minNode.nodeList.add(node);
+        node.mark = false;
+
+        if (parent.mark) cascadingCut(parent);
+        else {
+            parent.mark = true;
+            this.marksCounter++;
+        }
     }
 
    /**
