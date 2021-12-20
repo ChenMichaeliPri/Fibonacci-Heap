@@ -254,9 +254,9 @@ public class FibonacciHeap {
          */
 
         public void delete(HeapNode node) {
+            this.size--;
             if (this.size == 1) {
                 this.firstNode = null;
-                this.size--;
             }
             else {
                 HeapNode prevNode = node.prev;
@@ -265,9 +265,11 @@ public class FibonacciHeap {
                 nextNode.prev = prevNode;
                 prevNode.next = nextNode;
 
+                // if node's the new first node
                 if (node == this.firstNode) {
                     this.firstNode = node.next;
                 }
+                // detaching the node from the tree
                 node.next = node;
                 node.prev = node;
             }
