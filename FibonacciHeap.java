@@ -81,7 +81,7 @@ public class FibonacciHeap {
     * public HeapNode findMin()
     *
     * Returns the node of the heap whose key is minimal, or null if the heap is empty.
-    * Complexity O(1)
+    * Complexity O(1).
     *
     */
     public HeapNode findMin() {
@@ -92,7 +92,7 @@ public class FibonacciHeap {
     * public void meld (FibonacciHeap heap2)
     *
     * Melds heap2 with the current heap.
-    * Complexity O(1)
+    * Complexity O(1).
     *
     */
     public void meld (FibonacciHeap heap2) {
@@ -108,7 +108,7 @@ public class FibonacciHeap {
     * public int size()
     *
     * Returns the number of elements in the heap.
-    * Complexity O(1)
+    * Complexity O(1).
     *
     */
     public int size() {
@@ -158,11 +158,12 @@ public class FibonacciHeap {
     * Potential = #trees + 2*#marked
     * 
     * In words: The potential equals to the number of trees in the heap
-    * plus twice the number of marked nodes in the heap. 
+    * plus twice the number of marked nodes in the heap.
+    * Complexity O(1).
+    *
     */
-    public int potential() 
-    {    
-    	return -234; // should be replaced by student code
+    public int potential() {
+    	return this.minNode.nodeList.size + this.marksCounter*2;
     }
 
    /**
