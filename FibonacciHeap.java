@@ -54,8 +54,7 @@ public class FibonacciHeap {
     * Deletes the node containing the minimum key.
     *
     */
-    public void deleteMin()
-    {
+    public void deleteMin() {
      	return; // should be replaced by student code
      	
     }
@@ -85,8 +84,7 @@ public class FibonacciHeap {
     * Complexity O(1)
     *
     */
-    public HeapNode findMin()
-    {
+    public HeapNode findMin() {
     	return this.minNode;
     }
     
@@ -94,11 +92,16 @@ public class FibonacciHeap {
     * public void meld (FibonacciHeap heap2)
     *
     * Melds heap2 with the current heap.
+    * Complexity O(1)
     *
     */
-    public void meld (FibonacciHeap heap2)
-    {
-    	  return; // should be replaced by student code   		
+    public void meld (FibonacciHeap heap2) {
+    	  if (this.isEmpty()) this.minNode = heap2.minNode;
+    	  else if (!heap2.isEmpty()) {
+    	      this.minNode.nodeList.concatenate(heap2.minNode.nodeList);
+          }
+    	  this.size += heap2.size();
+    	  this.marksCounter += heap2.marksCounter;
     }
 
    /**
