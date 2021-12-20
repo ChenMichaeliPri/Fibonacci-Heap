@@ -60,6 +60,24 @@ public class FibonacciHeap {
      	
     }
 
+    /**
+     * public void findMaxRank()
+     *
+     * Returns the maximum rank binomial tree from the heap.
+     * Complexity O(log n) amortized, O(n) WC.
+     *
+     */
+    private int findMaxRank() {
+        int maxRank = 0;
+        HeapNode iterNode = this.minNode;
+
+        for (int i=0; i < this.minNode.nodeList.size; i++) {
+            maxRank = Math.max(iterNode.rank, maxRank);
+            iterNode = iterNode.next;
+        }
+        return maxRank;
+    }
+
    /**
     * public HeapNode findMin()
     *
@@ -69,7 +87,7 @@ public class FibonacciHeap {
     public HeapNode findMin()
     {
     	return new HeapNode(678);// should be replaced by student code
-    } 
+    }
     
    /**
     * public void meld (FibonacciHeap heap2)
