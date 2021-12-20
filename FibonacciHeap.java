@@ -51,12 +51,18 @@ public class FibonacciHeap {
    /**
     * public void deleteMin()
     *
-    * Deletes the node containing the minimum key.
-    *
+    * Deletes the node containing the minimum key, and consolidates the heap.
+    *Complexity O(log n amortized), O(n) WC.
     */
     public void deleteMin() {
-     	return; // should be replaced by student code
-     	
+     	deleteMinCut(this.minNode);
+        HeapNode iterNode = this.minNode;
+
+        for (int i=0; i < this.minNode.nodeList.size; i++) {
+            if (iterNode.key < this.minNode.key) this.minNode = iterNode;
+            iterNode = iterNode.next;
+        }
+        //consolidate()
     }
 
     /**
@@ -123,7 +129,7 @@ public class FibonacciHeap {
         this.minNode.nodeList.add(node);
         node.mark = false;
 
-        if (parent.mark) cut(parent);
+        if (parent.mark) cascadingCut(parent);
         else {
             parent.mark = true;
             this.marksCounter++;
