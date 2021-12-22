@@ -20,17 +20,29 @@ public class FibonacciHeap {
     public boolean isEmpty() {
     	return this.minNode == null;
     }
-		
+
+    /**
+     * public HeapNode insert(int key)
+     *
+     * Creates a node (of type HeapNode) which contains the given key, and inserts it into the heap.
+     * The added key is assumed not to already belong to the heap.
+     * Complexity O(1).
+     * Returns the newly created node.
+     */
+    public HeapNode insert(int key) {
+        return insert(key, null);
+    }
    /**
     * public HeapNode insert(int key)
     *
     * Creates a node (of type HeapNode) which contains the given key, and inserts it into the heap.
-    * The added key is assumed not to already belong to the heap.
+    * The added key is assumed not to already belong to the heap. If node != null has pointer for kmin method.
     * Complexity O(1).
     * Returns the newly created node.
     */
-    public HeapNode insert(int key) {
+    public HeapNode insert(int key, HeapNode node) {
     	HeapNode newNode = new HeapNode(key);
+    	newNode.kMinPointer = node;
     	this.size++;
 
     	if (isEmpty()) {
