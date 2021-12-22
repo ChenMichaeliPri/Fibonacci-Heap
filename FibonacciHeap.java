@@ -393,18 +393,21 @@ public class FibonacciHeap {
     public static int[] kMin(FibonacciHeap H, int k) {
         int[] arr = new int[k];
         FibonacciHeap helperHeap = new FibonacciHeap();
-        helperHeap.insert(H.minNode.key);
-        helperHeap.minNode.kMinPointer = H.minNode;
+        helperHeap.insert(H.minNode.key, H.minNode);
 
         for (int i=0; i<k; i++) {
             HeapNode minNode = helperHeap.minNode;
             arr[i] = minNode.key;
-            DoublyLinkedList sonsList = minNode.kMinPointer.child.nodeList; // before, check if there is a child
-            HeapNode iterNode = sonsList.firstNode;
+            if (minNode.kMinPointer.child != null) {
+                DoublyLinkedList sonsList = minNode.kMinPointer.child.nodeList; // before, check if there is a child
+                HeapNode iterNode = sonsList.firstNode;
 
-            for (int j=0; j < sonsList.size; j++) {
-
+                for (int j = 0; j < sonsList.size; j++) {
+                    helperHeap.insert(iterNode.key, iterNode);
+                    iterNode = iterNode.next;
+                }
             }
+            helperHeap.deleteMin();
         }
         return arr;
     }
@@ -434,6 +437,7 @@ public class FibonacciHeap {
 
     public static class DoublyLinkedList {
         private HeapNode firstNode;
+        private int size;
         private int size;
 
         public DoublyLinkedList() {
