@@ -270,10 +270,13 @@ public class FibonacciHeap {
     *
     * Deletes the node x from the heap.
 	* It is assumed that x indeed belongs to the heap.
+    * Complexity O(1)
     *
     */
     public void delete(HeapNode x) {
-    	return; // should be replaced by student code
+    	// Decrease key by "infinity"
+        decreaseKey(x, Math.abs(x.key) + Math.abs(this.minNode.key));
+        deleteMin();
     }
 
    /**
