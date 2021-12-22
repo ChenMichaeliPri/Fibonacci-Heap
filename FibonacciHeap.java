@@ -259,10 +259,17 @@ public class FibonacciHeap {
     * Note: The size of of the array depends on the maximum order of a tree, and an empty heap returns an empty array.
     * 
     */
-    public int[] countersRep()
-    {
-    	int[] arr = new int[100];
-        return arr; //	 to be replaced by student code
+    public int[] countersRep() {
+        if (this.minNode == null) return new int[0];
+        int maxRank = findMaxRank();
+        int[] counterRep  = new int[maxRank];
+        HeapNode iterNode = this.minNode.nodeList.firstNode;
+        int numOfRoots = this.minNode.nodeList.size;
+        for (int i = 0; i < numOfRoots; i++) {
+            counterRep[calcRank(iterNode)]++;
+            iterNode = iterNode.next;
+        }
+        return counterRep;
     }
 	
    /**
@@ -275,7 +282,7 @@ public class FibonacciHeap {
     */
     public void delete(HeapNode x) {
     	// Decrease key by "infinity"
-        decreaseKey(x, Math.abs(x.key) + Math.abs(this.minNode.key));
+        decreaseKey(x, Math.abs(x.key) + Math.abs(this.minNode.key) +1);
         deleteMin();
     }
 
