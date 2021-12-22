@@ -9,6 +9,7 @@ public class FibonacciHeap {
     private int marksCounter;
     private static int cutsCounter;
     private static int linksCounter;
+    private static final float GOLDEN_RATIO = (float) 1.62;
 
    /**
     * public boolean isEmpty()
@@ -59,13 +60,13 @@ public class FibonacciHeap {
         if (this.size == 1) this.minNode = null;
         else {
             deleteMinCut(this.minNode);
+            consolidate();
             HeapNode iterNode = this.minNode;
 
             for (int i=0; i < this.minNode.nodeList.size; i++) {
                 if (iterNode.key < this.minNode.key) this.minNode = iterNode;
                 iterNode = iterNode.next;
             }
-            consolidate();
         }
     }
 
@@ -111,6 +112,88 @@ public class FibonacciHeap {
         }
         return maxRank;
     }
+
+    // ----- Methods for consolidate -----
+
+    /**
+     * public DoublyLinkedList consolidate()
+     * Consolidates all roots by successive linking.
+     * Changes this.min.nodeList into new root list.
+     * Complexity: O(n)
+     */
+    public void consolidate(){
+        HeapNode iterNode = this.minNode.nodeList.firstNode;
+        DoublyLinkedList rootList = this.minNode.nodeList;
+        DoublyLinkedList consolidatedRootList = new DoublyLinkedList();
+        int numOfRoots = this.minNode.nodeList.size;
+        HeapNode[] buckets = new HeapNode[(int) (Math.log(this.size)/Math.log(GOLDEN_RATIO)) + 1]; // SIZE OF N????
+
+        // Consolidate roots iteratively (Insert buckets)
+        for (int i = 0; i < numOfRoots; i++) {
+            // Remove root from rootList
+            HeapNode nextIter = iterNode.next;
+            rootList.delete(iterNode);
+
+            // Iterative Consolidate
+            int rankOfNode = calcRank(iterNode);
+            while (buckets[rankOfNode] != null){
+                HeapNode secondNode = buckets[rankOfNode];
+                // Remove node from bucket
+                buckets[rankOfNode] = null;
+                iterNode = linkHeapNodes(iterNode, secondNode);
+                rankOfNode += 1;
+            }
+            buckets[rankOfNode] = iterNode;
+
+            iterNode = nextIter;
+        }
+
+        // Build new root list.
+        for (int i = 0; i < buckets.length; i++) {
+            if (buckets[i] != null){
+                consolidatedRootList.add(buckets[i]);
+            }
+        }
+        this.minNode.nodeList = consolidatedRootList;
+    }
+
+
+    /**
+     * public HeapNode linkHeapNodes(HeapNode firstNode, HeapNode secondNode)
+     * Link two nodes of the same rank.
+     * Returns a root representing a link of both nodes.
+     * Complexity: O(1)
+     */
+    public HeapNode linkHeapNodes(HeapNode firstNode, HeapNode secondNode){
+        HeapNode bigger = firstNode.key > secondNode.key ? firstNode : secondNode;
+        HeapNode smaller = firstNode.key < secondNode.key ? firstNode : secondNode;
+        if (smaller.child != null) { // Smaller already has children
+            DoublyLinkedList smallerChildren = smaller.child.nodeList;
+            smallerChildren.add(bigger);
+        }
+        else{ // Smaller has no children, make a child list for bigger
+            //and append it as a son of smaller
+            smaller.child = bigger;
+            bigger.nodeList = new DoublyLinkedList();
+            bigger.nodeList.add(bigger);
+        }
+        bigger.parent = smaller;
+        return smaller;
+    }
+
+    /**
+     * public int calcRank(HeapNode node)
+     * Calculate the num of children a node has and returns it.
+     * Complexity: O(1)
+     */
+    public int calcRank(HeapNode node){
+        if (node.child != null){
+            return node.child.nodeList.size;
+        }
+        return 0;
+    }
+
+    // ----- End of consolidate -----
 
     /**
      * private void changeParentToNull(DoublyLinkedList nodeDll)
@@ -291,16 +374,16 @@ public class FibonacciHeap {
         helperHeap.minNode.kMinPointer = H.minNode;
 
         for (int i=0; i<k; i++) {
-            HeapNode iterNode = helperHeap.minNode;
-            arr[i] = iterNode.key;
-            iterNode = iterNode.kMinPointer.child; // check if there is a child
-            helperHeap.deleteMin();
+            HeapNode minNode = helperHeap.minNode;
+            arr[i] = minNode.key;
+            DoublyLinkedList sonsList = minNode.kMinPointer.child.nodeList; // before, check if there is a child
+            HeapNode iterNode = sonsList.firstNode;
 
-            for (int j=0; j < iterNode.nodeList.size; j++) {
-                helperHeap.insert(iterNode.key);
+            for (int j=0; j < sonsList.size; j++) {
 
             }
         }
+        return arr;
     }
     
    /**
