@@ -257,7 +257,7 @@ public class FibonacciHeap {
     *
     * Return an array of counters. The i-th entry contains the number of trees of order i in the heap.
     * Note: The size of of the array depends on the maximum order of a tree, and an empty heap returns an empty array.
-    * 
+    * Complexity O(log n) amortized, O(n) WC
     */
     public int[] countersRep() {
         if (this.minNode == null) return new int[0];
@@ -265,6 +265,7 @@ public class FibonacciHeap {
         int[] counterRep  = new int[maxRank];
         HeapNode iterNode = this.minNode.nodeList.firstNode;
         int numOfRoots = this.minNode.nodeList.size;
+
         for (int i = 0; i < numOfRoots; i++) {
             counterRep[calcRank(iterNode)]++;
             iterNode = iterNode.next;
