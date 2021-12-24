@@ -304,11 +304,12 @@ public class FibonacciHeap {
     * Complexity O(1)
     *
     */
-    public void delete(HeapNode x) {
-    	// Decrease key by "infinity"
-        decreaseKey(x, Math.abs(x.key) + Math.abs(this.minNode.key) +1);
-        deleteMin();
-    }
+   public void delete(HeapNode x) {
+       // Decrease Key by "infinite"
+       decreaseKey(x, Math.abs(x.key) + Math.abs(this.minNode.key) + 1);
+       this.minNode = x;
+       deleteMin();
+   }
 
    /**
     * public void decreaseKey(HeapNode x, int delta)
