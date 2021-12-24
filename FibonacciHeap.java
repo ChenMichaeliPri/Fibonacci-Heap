@@ -155,7 +155,7 @@ public class FibonacciHeap {
         DoublyLinkedList rootList = this.minNode.nodeList;
         DoublyLinkedList consolidatedRootList = new DoublyLinkedList();
         int numOfRoots = this.minNode.nodeList.size;
-        HeapNode[] buckets = new HeapNode[(int) (Math.log(this.size)/Math.log(GOLDEN_RATIO)) + 1]; // SIZE OF N????
+        HeapNode[] buckets = new HeapNode[(int) (Math.log(this.size)/Math.log(GOLDEN_RATIO)) + 1];
 
         // Consolidate roots iteratively (Insert buckets)
         for (int i = 0; i < numOfRoots; i++) {
@@ -167,9 +167,9 @@ public class FibonacciHeap {
             int rankOfNode = calcRank(iterNode);
             while (buckets[rankOfNode] != null){
                 HeapNode secondNode = buckets[rankOfNode];
+                iterNode = linkHeapNodes(iterNode, secondNode);
                 // Remove node from bucket
                 buckets[rankOfNode] = null;
-                iterNode = linkHeapNodes(iterNode, secondNode);
                 rankOfNode += 1;
             }
             buckets[rankOfNode] = iterNode;
@@ -180,10 +180,12 @@ public class FibonacciHeap {
         // Build new root list.
         for (int i = 0; i < buckets.length; i++) {
             if (buckets[i] != null){
+                buckets[i].parent = null;
                 consolidatedRootList.add(buckets[i]);
+                buckets[i].nodeList = consolidatedRootList;
             }
         }
-        this.minNode.nodeList = consolidatedRootList;
+        this.minNode = consolidatedRootList.firstNode;
     }
 
 
