@@ -94,33 +94,24 @@ public class FibonacciHeap {
      */
     private void deleteMinCut(HeapNode node) {
         cutsCounter++;
-        if (node.nodeList.size == 1) { // Node is alone in the root list.
+        if (node.nodeList.size == 1){ // Node is alone in the root list.
             this.minNode = node.child;
-            if (this.minNode != null) { // If node had a child. CHANGE 3
+            if (this.minNode != null){ // If node had a child.
                 this.minNode.parent = null;
             }
         }
-        else {
-            if (node.child != null) { // CHANGE 1
-                // Insert node's children to root
-                changeParentToNull(node.child.nodeList); // CHANGE 2
-                this.minNode.nodeList.size += node.child.nodeList.size - 1;
-                HeapNode leftFromNode = node.prev;
+        else{
+            HeapNode newPointer = node.next;
+            if (node.child != null) {
+                // Insert node's children right to node.
+                HeapNode left = node;
                 HeapNode rightFromNode = node.next;
-                HeapNode leftMostChild = node.child.nodeList.firstNode;
-                HeapNode rightMostChild = node.child.nodeList.firstNode.prev;
-                leftFromNode.next = leftMostChild;
-                leftMostChild.prev = leftFromNode;
-                rightFromNode.prev = rightMostChild;
-                rightMostChild.next = rightFromNode;
-                this.minNode = node.child; // changing the minNode temp to prevent null pointer, fixed in deleteMin.
+                node.nodeList.concatenateBetween(left, rightFromNode, node.child.nodeList);
+                node.child = null;
             }
-            else { // Node has no children
-                this.minNode.nodeList.size--;
-                node.prev.next = node.next;
-                node.next.prev = node.prev;
-                this.minNode = node.next; // changing the minNode temp to prevent null pointer, fixed in deleteMin.
-            }
+            // Detach node from heap.
+            node.nodeList.delete(node);
+            this.minNode = newPointer;
         }
     }
 
@@ -548,6 +539,25 @@ public class FibonacciHeap {
                 node.next = node;
                 node.prev = node;
             }
+        }
+
+        private void concatenateBetween(HeapNode left, HeapNode right, DoublyLinkedList innerList){
+            // Change inner list parents
+            HeapNode iterNode = innerList.firstNode;
+            for (int i = 0; i < innerList.size; i++) {
+                iterNode.mark = false;
+                iterNode.parent = null;
+                iterNode.nodeList = this;
+                iterNode = iterNode.next;
+            }
+            // Increase roots list size
+            this.size += innerList.size;
+            HeapNode leftMostChild = innerList.firstNode;
+            HeapNode rightMostChild = innerList.firstNode.prev;
+            left.next = leftMostChild;
+            leftMostChild.prev = left;
+            right.prev = rightMostChild;
+            rightMostChild.next = right;
         }
     }
 }
