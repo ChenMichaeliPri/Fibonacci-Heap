@@ -11,7 +11,7 @@ public class FibonacciHeap {
     private static int linksCounter;
     private static final float GOLDEN_RATIO = (float) 1.62;
 
-   /**
+    /**
     * public boolean isEmpty()
     *
     * Returns true if and only if the heap is empty.
@@ -33,7 +33,7 @@ public class FibonacciHeap {
         return insert(key, null);
     }
    /**
-    * public HeapNode insert(int key)
+    * public HeapNode insert(int key, HeapNode node)
     *
     * Creates a node (of type HeapNode) which contains the given key, and inserts it into the heap.
     * The added key is assumed not to already belong to the heap. If node != null has pointer for kmin method.
@@ -69,42 +69,59 @@ public class FibonacciHeap {
     *
     */
     public void deleteMin() {
+        if (this.size == 0) return;
         if (this.size == 1) this.minNode = null;
         else {
             deleteMinCut(this.minNode);
-            consolidate();
-            HeapNode iterNode = this.minNode;
 
+            consolidate();
+
+            HeapNode iterNode = this.minNode;
             for (int i=0; i < this.minNode.nodeList.size; i++) {
                 if (iterNode.key < this.minNode.key) this.minNode = iterNode;
                 iterNode = iterNode.next;
             }
         }
+        this.size--;
     }
 
     /**
      * private void deleteMinCut(HeapNode node)
      *
      * Cuts the node from the current tree, supports deleteMinCut method.
-     * Complexity O(1 amortized).
+     * Complexity O(1).
      *
      */
     private void deleteMinCut(HeapNode node) {
         cutsCounter++;
-        this.minNode.nodeList.size += node.child.nodeList.size - 1;
-        HeapNode leftFromNode = node.prev;
-        HeapNode rightFromNode = node.next;
-        HeapNode leftmostChild = node.child.nodeList.firstNode;
-        HeapNode rightmostChild = node.child.nodeList.firstNode.prev;
-        leftFromNode.next = leftmostChild;
-        leftmostChild.prev = leftFromNode;
-        rightFromNode.prev = rightmostChild;
-        rightmostChild.next = rightFromNode;
-
-        // change min
-        this.minNode = node.next;
-        node.child = null;
-        node.next = node.prev = node;
+        if (node.nodeList.size == 1) { // Node is alone in the root list.
+            this.minNode = node.child;
+            if (this.minNode != null) { // If node had a child. CHANGE 3
+                this.minNode.parent = null;
+            }
+        }
+        else {
+            if (node.child != null) { // CHANGE 1
+                // Insert node's children to root
+                changeParentToNull(node.child.nodeList); // CHANGE 2
+                this.minNode.nodeList.size += node.child.nodeList.size - 1;
+                HeapNode leftFromNode = node.prev;
+                HeapNode rightFromNode = node.next;
+                HeapNode leftMostChild = node.child.nodeList.firstNode;
+                HeapNode rightMostChild = node.child.nodeList.firstNode.prev;
+                leftFromNode.next = leftMostChild;
+                leftMostChild.prev = leftFromNode;
+                rightFromNode.prev = rightMostChild;
+                rightMostChild.next = rightFromNode;
+                this.minNode = node.child; // changing the minNode temp to prevent null pointer, fixed in deleteMin.
+            }
+            else { // Node has no children
+                this.minNode.nodeList.size--;
+                node.prev.next = node.next;
+                node.next.prev = node.prev;
+                this.minNode = node.next; // changing the minNode temp to prevent null pointer, fixed in deleteMin.
+            }
+        }
     }
 
     /**
@@ -131,7 +148,7 @@ public class FibonacciHeap {
      * public DoublyLinkedList consolidate()
      * Consolidates all roots by successive linking.
      * Changes this.min.nodeList into new root list.
-     * Complexity: O(n)
+     * Complexity: O(Log n) amortized, O(n) WC.
      */
     public void consolidate(){
         HeapNode iterNode = this.minNode.nodeList.firstNode;
@@ -176,7 +193,8 @@ public class FibonacciHeap {
      * Returns a root representing a link of both nodes.
      * Complexity: O(1)
      */
-    public HeapNode linkHeapNodes(HeapNode firstNode, HeapNode secondNode){
+    public HeapNode linkHeapNodes(HeapNode firstNode, HeapNode secondNode) {
+        linksCounter++;
         HeapNode bigger = firstNode.key > secondNode.key ? firstNode : secondNode;
         HeapNode smaller = firstNode.key < secondNode.key ? firstNode : secondNode;
         if (smaller.child != null) { // Smaller already has children
@@ -212,7 +230,7 @@ public class FibonacciHeap {
      *
      * Supports deleteMin method. Changes the parents of the sons of deleted node to null,
      * changes the mark of the nodes to false;
-     * Complexity O(Log n amortized).
+     * Complexity O(Log n amortized), O(n) WC.
      *
      */
     private void changeParentToNull(DoublyLinkedList nodeDll) {
@@ -427,7 +445,12 @@ public class FibonacciHeap {
         private HeapNode parent;
         private HeapNode child;
         private  int rank;
-        private boolean mark;
+
+       public int getKey() {
+           return key;
+       }
+
+       private boolean mark;
         private DoublyLinkedList nodeList;
 
     	public HeapNode(int key) {
@@ -437,7 +460,6 @@ public class FibonacciHeap {
 
     public static class DoublyLinkedList {
         private HeapNode firstNode;
-        private int size;
         private int size;
 
         public DoublyLinkedList() {
@@ -483,7 +505,6 @@ public class FibonacciHeap {
         public void add(HeapNode node) {
             if (this.size == 0) {
                 this.firstNode = node;
-                size++;
                 node.next = node;
                 node.prev = node;
             }
@@ -495,6 +516,7 @@ public class FibonacciHeap {
                 this.firstNode.prev = node;
                 this.firstNode = node;
             }
+            this.size++;
         }
 
         /**
